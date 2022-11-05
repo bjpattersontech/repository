@@ -1,0 +1,224 @@
+/*
+ * @author Brandon Patterson
+ * October 10, 2022
+ * This program prompts the user to input information about Customers, either one at a time or several at a time.
+ * Then the user can have Customer information displayed 
+ * either by the customer ID, within a sales range, or all customers. 
+ */
+package week8Playground;
+
+import java.util.Scanner;
+
+public class SampleCustomerMenu {
+	
+	//initialize 3 arrays for the data
+	public static String[] custNamesList = new String[100];
+		
+	public static int[] custIDList = new int[100];
+		
+	public static double[] custSalesList = new double[100];
+	
+	static int counter = 0; //because counter is going to be 
+	
+	//Method that prompts user for for how many customers
+	public static int inputNumberOfCust() {
+		int numExample = 0;
+		do {
+			//System.out.print("\n");
+			System.out.println("Firstly, how many customers would you like to input?");
+			System.out.println("Please use a number greater than 0: ");
+			Scanner scan = new Scanner(System.in);
+			numExample = scan.nextInt(); } while (numExample <= 0);
+		return numExample;
+	}
+	
+	//Method that prompts user for the Customer's Name
+	public static String custNameInput() {
+		String custNameExample = "";
+		do {
+			System.out.println("Please enter the customer's name: ");
+		
+		Scanner promptName = new Scanner(System.in);
+		custNameExample = promptName.nextLine(); } while (custNameExample == "");
+		return custNameExample; 
+	}//closes custNameInput() method
+	
+	//Method that prompts user for the Customer's ID
+	public static int custIDInput() {
+		int custIDExample = 0;
+		do {
+			System.out.println("Please enter the customer's ID: ");
+		Scanner promptID = new Scanner(System.in);
+		custIDExample = promptID.nextInt();	} while (custIDExample <= 0);
+		return custIDExample;
+	}//closes custIDInput() method
+	
+	//Method that prompts user for the Customer's Total Sales
+	public static double custSalesInput() {
+		double custSalesExample = 0;
+		do {
+		System.out.println("Please enter the total sales for the customer");
+		Scanner promptSales = new Scanner(System.in);
+		custSalesExample = promptSales.nextDouble(); } while (custSalesExample < 0);
+		return custSalesExample;
+	}//closes custSalesInput() method
+	
+	//Method to add data for one customer
+	public static void addSingleCust() {
+		
+	String userGivenName = custNameInput();
+	custNamesList[counter] = userGivenName;
+	int userGivenID = custIDInput();
+	custIDList[counter] = userGivenID;
+	double userGivenSales = custSalesInput();
+	custSalesList[counter] = userGivenSales;
+	counter++;
+	}//closes method addSingleCust() 
+	
+	//Method to add multiple customers
+	public static void addMultiCust() {
+		
+		//prompt user for the number of Customers
+		int num = inputNumberOfCust();
+		
+		//for loop based on num
+		for (counter = 0; counter <= num-1; counter++) {
+			String userGivenName = custNameInput();
+			custNamesList[counter] = userGivenName;
+			int userGivenID = custIDInput();
+			custIDList[counter] = userGivenID;
+			double userGivenSales = custSalesInput();
+			custSalesList[counter] = userGivenSales;
+		}//closes the for loop
+	}//closes method addMultiCust()
+
+	//Method to display all customers
+	public static void displayAllCust() {
+		//use a for loop
+		int i;
+		for (i = 0; i <= counter-1; i++) {
+			System.out.println("Name: " + custNamesList[i] + " Customer ID: " + custIDList[i] + " Sales Total: " + custSalesList[i]);
+		}//closes for loop
+		System.out.println(" ");
+	}//closes method displayAllCust
+		
+	public static void findCust() {
+		System.out.println("To find a particular Customer");
+		System.out.println("Please enter the Customer ID: ");
+		Scanner promptID2 = new Scanner(System.in);
+		int useThisID = promptID2.nextInt();
+		
+		//run method to search for ID among element arrays
+		int j = searchID(custIDList, useThisID); 
+		
+		if (j < 0) {
+			System.out.println("Customer ID not found");
+		}//closes the if statement
+		else {
+			System.out.println("Name: " + custNamesList[j] + " Customer ID: " + custIDList[j] + " Sales Total: " + custSalesList[j]);
+		}//closes the else statement
+	}//closes findCust() method
+	
+
+	public static int searchID(int[] custIDList, int useThisID) {
+		//verify the array isn't null
+				if (custIDList == null) {
+				return -1;
+			}//closes verification
+				
+				//initialize variable to search the array
+				int len = custIDList.length;
+				int index = 0;
+				
+				//traverse the array with a while loop
+				while (index < len) {
+					if (custIDList[index] == useThisID) {
+						return index;
+					}//closes if statement
+					else {
+						index++;
+					}//closes else statement
+				}//closes the while loop
+				return -1;
+	}//closes searchID method
+	
+	public static void findCustInRange() {
+		System.out.println("To find Customers based on sales range,");
+		System.out.println("Please enter the range minimum: ");
+		Scanner promptSales1 = new Scanner(System.in);
+		double salesRangeMinimum = promptSales1.nextDouble();
+		System.out.println("Please enter the range maximum: ");
+		Scanner promptSales2 = new Scanner(System.in);
+		double salesRangeMaximum = promptSales2.nextDouble();
+		
+		//initialize variable to search the array
+		int len2 = custSalesList.length;
+		int index2 = 0;
+		int count = 0;
+		
+		//traverse the array with a while loop
+		while (index2 < len2) {
+			if ((salesRangeMinimum < custSalesList[index2]) && (custSalesList[index2] < salesRangeMaximum)) {
+				System.out.println("Name: " + custNamesList[index2] + " Customer ID: " + custIDList[index2] + " Sales Total: " + custSalesList[index2]);
+				count++;
+				index2++;
+				}//closes if statement
+			else {
+				index2++;
+			}//closes else statement
+		}//closes the while loop
+		System.out.println("A total of " + count + " customers are in that range."); 
+	}//closes findCustInRange method
+
+	//Method to exit program
+	public static void exitProgram() {
+		System.out.println("Thank you using the program!");
+		System.out.println("Brandon Patterson, CMIS 141 6381, 10/10/22");
+	}
+	
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+			
+			//The Menu/Switch board
+			int menuOption;
+			do {
+				System.out.println("How can we help you today?");
+				System.out.println("1: Add single new customer");
+				System.out.println("2: Add multiple new customers");
+				System.out.println("3: Display information about all customers");
+				System.out.println("4: Retrieve specific customer's data");
+				System.out.println("5: Retrieve customers with orders based on range");
+				System.out.println("9: Exit program");
+				System.out.println("\nPlease enter your selection: ");
+				Scanner whichOption = new Scanner(System.in);
+				menuOption = whichOption.nextInt();
+				
+				switch (menuOption) {
+				case 1: addSingleCust();
+							break;
+				
+				case 2: addMultiCust();
+							break;
+							
+				case 3: displayAllCust();
+							break;
+							
+				case 4: findCust();
+							break;
+							
+				case 5: findCustInRange();
+							break;
+							
+				case 9: exitProgram();
+							break;
+				
+				default: System.out.print("\nInvalid selection! Please select 1, 2, 3, or 4.");
+				}
+			} while (menuOption != 9);
+		
+
+	}// closes the method main()
+
+}//closes the class 
